@@ -22,11 +22,12 @@ class Game
 {
     public:
         Game ();
+        Game (int w, int h, string title);
         void Init ();//Needs to be modified
         void Display (ostream & outs);//Needs to be modified
 
         void MakeMove (int Who, int Row, int Col);
-        void Click()
+        void Click();
 
         bool ChooseMove (int Who, int & Row, int & Col);//Needs to be modified
         bool AiPlayer (int Who, int & Row, int & Col);

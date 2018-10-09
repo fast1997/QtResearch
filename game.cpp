@@ -36,10 +36,22 @@ void Game::Cell::Display( ostream & Out )
 
 Game::Game ()
 {
+   maxWidth = 400;
+   maxHeight = 700;
     title = "Othello/Reversi";
     Init();
 }
+Game::Game(int w, int h, string t)
+{
+    maxWidth = w;
+    maxHeight = h;
+    title = t;
+    Init();
+}
+void Game:: Click(QPoint position)
+{
 
+}
 //Reset all attributes of the game back to the original.
 //noValidMoves will be used to determine if there are no
 //valid moves for both players.

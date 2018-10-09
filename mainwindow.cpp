@@ -13,6 +13,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
     if(event->buttons() == Qt::LeftButton){
         QSize size = this->size();
         qDebug() << "Width: " << size.width() << " Height: " << size.height();
+        qDebug() << event->pos();
     }
 }
 MainWindow::~MainWindow()
