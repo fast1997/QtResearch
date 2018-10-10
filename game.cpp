@@ -8,15 +8,18 @@ Game::Cell::Cell()
     importance = 0;
     possibleFlips = 0;
     r = c = 0;
+    cellRect = nullptr;
 }
 
-Game::Cell::Cell(int row, int col)
+Game::Cell::Cell(int row, int col, QGraphicsScene * s)
 {
     owner = 0;
     importance = 0;
     possibleFlips = 0;
     r = row;
     c = col;
+    cellRect = new QGraphicsRectItem();
+    s->addItem(cellRect);
 }
 //Displays each cell based on who the owner of that cell is. Player 1 will be displayed as a red 1.
 //Player 2 will be displayed as a blue 2.
@@ -29,23 +32,29 @@ void Game::Cell::Display( ostream & Out )
         case 2:
             break;
         default:
-
             break;
     }
 }
 
-Game::Game (QGraphicsScene * scene)
+Game::Game (QGraphicsScene * s, QMainWindow * mw)
 {
-   maxWidth = scene->width();
-   maxHeight = scene->height();
-   title = "Othello/Reversi";
-   QRect test(500,500,500,500);
-   //scene->addRect(test);
-   Init();
+    scene = s;
+    mWindow = mw;
+    maxWidth = mWindow->width();
+    maxHeight = mWindow->height();
+    gameBoardRect = new QGraphicsRectItem();
+    dataRect = new QGraphicsRectItem();
+    scene->addItem(gameBoardRect);
+    scene->addItem(dataRect);
+    title = "Othello/Reversi";
+    Init();
 }
 void Game:: Click(QPoint position)
 {
-
+    if( gameBoardRect->contains(position) )
+        qDebug() << "Clicked gameBoard";
+    else if (dataRect->contains(position))
+        qDebug() << "Clicked data";
 }
 //Reset all attributes of the game back to the original.
 //noValidMoves will be used to determine if there are no
@@ -59,6 +68,7 @@ void Game::Init ()
     noValidMoves[0] = false;
     noValidMoves[1] = false;
     noValidMoves[2] = false;
+    SetUpRects();
 
     int middle = ROWS/2;
 
@@ -94,11 +104,7 @@ void Game::Init ()
     CalculateValidMoves();
 }
 
-void Game::SetUpRects()
-{
-    //QPen
-    gameBoardRect = QRect(100, 100, 100, 200);
-}
+
 //Helper function to print the top border of the game display.
 void Game::PrintTopBorder( ostream & Out, int maxCol )
 {
@@ -114,11 +120,21 @@ void Game::PrintTopBorder( ostream & Out, int maxCol )
 
 //Display the detail of the game, such as the gameboard of the current state of the game.
 //and the score of each players.
-void Game::Display (QPaintEvent * event)
+void Game::Display ()
 {
-
+    maxWidth = mWindow->width();
+    maxHeight = mWindow->height();
+    //maxWidth = size.width();
+    //maxHeight = size.height();
+    SetUpRects();
 }
 
+void Game::SetUpRects()
+{
+    gameBoardRect->setRect(maxWidth/12, maxHeight/12, (maxWidth/12)*8, (maxHeight/12)*8);
+    dataRect->setRect( (maxWidth*3)/4, maxHeight/12, ((maxWidth*11)/12)-((maxWidth*3)/4), ((maxHeight)/2) - (maxHeight/12) );
+
+}
 //Determines whether the game is over.
 //If both player's index in the noValidMoves array are true,
 //both players were not able to make a move. Thus, the game is over

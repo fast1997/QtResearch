@@ -3,10 +3,12 @@
 #include <iostream>
 #include <vector>
 #include <QPoint>
-#include <QRect>
+#include <QGraphicsRectItem>
 #include <QPen>
 #include <QPaintEvent>
 #include<QGraphicsScene>
+#include <QtDebug>
+#include <QMainWindow>
 
 using namespace std;
 
@@ -27,9 +29,9 @@ enum GameDirection {
 class Game
 {
     public:
-        Game (QGraphicsScene * scene);
+        Game (QGraphicsScene * s, QMainWindow * mw);
         void Init ();//Needs to be modified
-        void Display (QPaintEvent * event);//Needs to be modified
+        void Display ();//Needs to be modified
 
         void MakeMove (int Who, int Row, int Col);
         void Click(QPoint position);
@@ -43,14 +45,14 @@ class Game
         struct Cell
         {
             Cell();
-            Cell(int row, int col);
+            Cell(int row, int col,QGraphicsScene * s);
             void Display(ostream & outs);
 
             int importance;
             int owner;
             int r, c;
             int possibleFlips;
-            QRect cellRect;
+            QGraphicsRectItem * cellRect;
         };
 
         void SetUpRects();
@@ -79,7 +81,10 @@ class Game
         int maxWidth;
         int maxHeight;
 
-        QRect gameBoardRect;
+        QGraphicsScene * scene;
+        QMainWindow * mWindow;
+        QGraphicsRectItem *gameBoardRect;
+        QGraphicsRectItem *dataRect;
 };
 
 #endif // GAME_H
