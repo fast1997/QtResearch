@@ -34,19 +34,14 @@ void Game::Cell::Display( ostream & Out )
     }
 }
 
-Game::Game ()
+Game::Game (QGraphicsScene * scene)
 {
-   maxWidth = 400;
-   maxHeight = 700;
-    title = "Othello/Reversi";
-    Init();
-}
-Game::Game(int w, int h, string t)
-{
-    maxWidth = w;
-    maxHeight = h;
-    title = t;
-    Init();
+   maxWidth = scene->width();
+   maxHeight = scene->height();
+   title = "Othello/Reversi";
+   QRect test(500,500,500,500);
+   //scene->addRect(test);
+   Init();
 }
 void Game:: Click(QPoint position)
 {
@@ -63,7 +58,7 @@ void Game::Init ()
     gameOver = false;
     noValidMoves[0] = false;
     noValidMoves[1] = false;
-    noValidMoves[3] = false;
+    noValidMoves[2] = false;
 
     int middle = ROWS/2;
 
@@ -98,6 +93,12 @@ void Game::Init ()
 
     CalculateValidMoves();
 }
+
+void Game::SetUpRects()
+{
+    //QPen
+    gameBoardRect = QRect(100, 100, 100, 200);
+}
 //Helper function to print the top border of the game display.
 void Game::PrintTopBorder( ostream & Out, int maxCol )
 {
@@ -113,7 +114,7 @@ void Game::PrintTopBorder( ostream & Out, int maxCol )
 
 //Display the detail of the game, such as the gameboard of the current state of the game.
 //and the score of each players.
-void Game::Display (ostream & Out)
+void Game::Display (QPaintEvent * event)
 {
 
 }

@@ -2,6 +2,12 @@
 #define GAME_H
 #include <iostream>
 #include <vector>
+#include <QPoint>
+#include <QRect>
+#include <QPen>
+#include <QPaintEvent>
+#include<QGraphicsScene>
+
 using namespace std;
 
 const int ROWS = 8;
@@ -21,18 +27,18 @@ enum GameDirection {
 class Game
 {
     public:
-        Game ();
-        Game (int w, int h, string title);
+        Game (QGraphicsScene * scene);
         void Init ();//Needs to be modified
-        void Display (ostream & outs);//Needs to be modified
+        void Display (QPaintEvent * event);//Needs to be modified
 
         void MakeMove (int Who, int Row, int Col);
-        void Click();
+        void Click(QPoint position);
 
         bool ChooseMove (int Who, int & Row, int & Col);//Needs to be modified
         bool AiPlayer (int Who, int & Row, int & Col);
         bool Done ();
         int Winner (ostream & outs);
+
     private:
         struct Cell
         {
@@ -44,7 +50,10 @@ class Game
             int owner;
             int r, c;
             int possibleFlips;
+            QRect cellRect;
         };
+
+        void SetUpRects();
         void PrintTopBorder( ostream & outs, int maxCol );
 
         void CalculateScores(int numFlipped);
@@ -66,6 +75,11 @@ class Game
         bool gameOver;
         int currentPlayer;
         int movesLeft;
+
+        int maxWidth;
+        int maxHeight;
+
+        QRect gameBoardRect;
 };
 
 #endif // GAME_H
