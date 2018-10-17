@@ -1,6 +1,5 @@
 #ifndef GAME_H
 #define GAME_H
-<<<<<<< HEAD
 
 #include<QGraphicsView>
 #include<QGraphicsRectItem>
@@ -9,17 +8,6 @@
 #include<vector>
 #include<string>
 #include<QPaintEvent>
-=======
-#include <iostream>
-#include <vector>
-#include <QPoint>
-#include <QGraphicsRectItem>
-#include <QPen>
-#include <QPaintEvent>
-#include<QGraphicsScene>
-#include <QtDebug>
-#include <QMainWindow>
->>>>>>> e1b351f58c7540dcd016904f890fae707e6f0ca0
 
 using namespace std;
 
@@ -37,7 +25,6 @@ enum GameDirection {
     GameRIGHTBOTTOM //7
 };
 
-<<<<<<< HEAD
 class Game{
 
 public:
@@ -56,41 +43,11 @@ private:
         {
             Cell();
             Cell(int row, int col);
-=======
-class Game
-{
-    public:
-        Game (QGraphicsScene * s, QMainWindow * mw);
-        void Init ();//Needs to be modified
-        void Display ();//Needs to be modified
-
-        void MakeMove (int Who, int Row, int Col);
-        void Click(QPoint position);
-
-        bool ChooseMove (int Who, int & Row, int & Col);//Needs to be modified
-        bool AiPlayer (int Who, int & Row, int & Col);
-        bool Done ();
-        int Winner (ostream & outs);
-
-    private:
-        struct Cell
-        {
-            Cell();
-            Cell(int row, int col,QGraphicsScene * s);
-            void Display(ostream & outs);
->>>>>>> e1b351f58c7540dcd016904f890fae707e6f0ca0
 
             int owner;
             int r, c;
             int possibleFlips;
-            QGraphicsRectItem * cellRect;
         };
-<<<<<<< HEAD
-=======
-
-        void SetUpRects();
-        void PrintTopBorder( ostream & outs, int maxCol );
->>>>>>> e1b351f58c7540dcd016904f890fae707e6f0ca0
 
         void CalculateScores(int numFlipped);
         void CalculateValidMoves();
@@ -113,7 +70,6 @@ class Game
         int humanScore, aiScore;
         int currentPlayer;
         int movesLeft;
-<<<<<<< HEAD
         int boardSize;
         int theWinner;
 
@@ -126,17 +82,6 @@ class Game
         QGraphicsTextItem * p1ScoreText;
         QGraphicsTextItem * p2ScoreText;
         QGraphicsTextItem * inValidMoveDisplay;
-=======
-
-        int maxWidth;
-        int maxHeight;
-
-        QGraphicsScene * scene;
-        QMainWindow * mWindow;
-        QGraphicsRectItem *gameBoardRect;
-        QGraphicsRectItem *dataRect;
-};
->>>>>>> e1b351f58c7540dcd016904f890fae707e6f0ca0
 
         QGraphicsRectItem *thisRect;
         QGraphicsRectItem *boardRect;
