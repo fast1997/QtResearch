@@ -9,25 +9,71 @@ Game::Cell::Cell()
     owner = 0;
     possibleFlips = 0;
     r = c = 0;
+    cellRect = nullptr;
 }
 
-Game::Cell::Cell(int row, int col)
+Game::Cell::Cell(int row, int col, QGraphicsScene * s)
 {
     owner = 0;
     possibleFlips = 0;
     r = row;
     c = col;
+    cellRect = new QGraphicsRectItem();
+    s->addItem(cellRect);
 }
+<<<<<<< HEAD
 
 Game::Game(QGraphicsScene * _scene, QGraphicsView * _view)
 {
     view = _view;
     scene = _scene;
+=======
+//Displays each cell based on who the owner of that cell is. Player 1 will be displayed as a red 1.
+//Player 2 will be displayed as a blue 2.
+//No owner is just a blank
+void Game::Cell::Display( ostream & Out )
+{
+    switch(owner){
+        case 1:
+            break;
+        case 2:
+            break;
+        default:
+            break;
+    }
+}
+
+Game::Game (QGraphicsScene * s, QMainWindow * mw)
+{
+    scene = s;
+    mWindow = mw;
+    maxWidth = mWindow->width();
+    maxHeight = mWindow->height();
+    gameBoardRect = new QGraphicsRectItem();
+    dataRect = new QGraphicsRectItem();
+    scene->addItem(gameBoardRect);
+    scene->addItem(dataRect);
+    title = "Othello/Reversi";
+>>>>>>> e1b351f58c7540dcd016904f890fae707e6f0ca0
     Init();
     setUpDisplay();
 }
+<<<<<<< HEAD
 
 void Game::Init()
+=======
+void Game:: Click(QPoint position)
+{
+    if( gameBoardRect->contains(position) )
+        qDebug() << "Clicked gameBoard";
+    else if (dataRect->contains(position))
+        qDebug() << "Clicked data";
+}
+//Reset all attributes of the game back to the original.
+//noValidMoves will be used to determine if there are no
+//valid moves for both players.
+void Game::Init ()
+>>>>>>> e1b351f58c7540dcd016904f890fae707e6f0ca0
 {
     qDebug () << "The function Init function is being called";
     movesLeft = ROWS*ROWS - 4;
@@ -36,7 +82,8 @@ void Game::Init()
     gameOver = false;
     noValidMoves[0] = false;
     noValidMoves[1] = false;
-    noValidMoves[3] = false;
+    noValidMoves[2] = false;
+    SetUpRects();
 
     int middle = ROWS/2;
 
@@ -57,9 +104,80 @@ void Game::Init()
     gameBoard[middle-1][middle-1].owner = 1;
 
     CalculateValidMoves();
+<<<<<<< HEAD
 
 }
 
+=======
+}
+
+
+//Helper function to print the top border of the game display.
+void Game::PrintTopBorder( ostream & Out, int maxCol )
+{
+    Out << "  ";
+    for(int i = 0; i < maxCol; i++)
+    {
+        if( i == maxCol-1 )
+            Out << "+---+";
+        else
+            Out << "+---";
+    }
+}
+
+//Display the detail of the game, such as the gameboard of the current state of the game.
+//and the score of each players.
+void Game::Display ()
+{
+    maxWidth = mWindow->width();
+    maxHeight = mWindow->height();
+    //maxWidth = size.width();
+    //maxHeight = size.height();
+    SetUpRects();
+}
+
+void Game::SetUpRects()
+{
+    gameBoardRect->setRect(maxWidth/12, maxHeight/12, (maxWidth/12)*8, (maxHeight/12)*8);
+    dataRect->setRect( (maxWidth*3)/4, maxHeight/12, ((maxWidth*11)/12)-((maxWidth*3)/4), ((maxHeight)/2) - (maxHeight/12) );
+
+}
+//Determines whether the game is over.
+//If both player's index in the noValidMoves array are true,
+//both players were not able to make a move. Thus, the game is over
+//because there are no valid move for both players to make.
+//Otherwise, if both players' score reach the total number of cells
+//on the gameboard, then the game is over.
+bool Game::Done ()
+{
+    if( noValidMoves[1] && noValidMoves[2] )
+        return true;
+    int numOfMaxMoves = ROWS*COLS;
+    if(aiScore + humanScore >= numOfMaxMoves)
+        return true;
+    return false;
+}
+
+//Determines the winner based on the scores of each players. Then return
+//the winning player's number. If there is a tied, then number 3 will be returned.
+int Game::Winner (ostream & Out)
+{
+    if( aiScore > humanScore )
+    {
+        Out << "Player AI Won!\tScore: " << aiScore << endl;
+        return 2;
+    }
+    else if( aiScore < humanScore )
+    {
+        Out << "Player HUMAN Won!\tScore: " << humanScore << endl;
+        return 1;
+    }
+    else
+    {
+        Out << "There was a tie!\tScore: " << aiScore << endl;
+        return 3;
+    }
+>>>>>>> e1b351f58c7540dcd016904f890fae707e6f0ca0
 
 
 void Game::MakeMove(int Who, int Row, int Col)

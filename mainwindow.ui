@@ -6,20 +6,29 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>817</width>
+    <height>534</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
+<<<<<<< HEAD
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
+=======
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <item>
+>>>>>>> e1b351f58c7540dcd016904f890fae707e6f0ca0
      <widget class="QGraphicsView" name="graphicsView"/>
     </item>
    </layout>
   </widget>
+<<<<<<< HEAD
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
@@ -39,6 +48,8 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+=======
+>>>>>>> e1b351f58c7540dcd016904f890fae707e6f0ca0
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
