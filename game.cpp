@@ -9,6 +9,9 @@ Game::Cell::Cell()
     owner = 0;
     possibleFlips = 0;
     r = c = 0;
+    cellRect = nullptr;
+    ownerCir = nullptr;
+
 }
 
 Game::Cell::Cell(int row, int col)
@@ -17,19 +20,37 @@ Game::Cell::Cell(int row, int col)
     possibleFlips = 0;
     r = row;
     c = col;
+    cellRect = nullptr;
+    ownerCir = nullptr;
+}
+
+void Game::Cell::Display()
+{
+    //int row = int(x) * cellSize; int column = int(y) * cellSize;
+    switch(owner){
+    case 0:
+        ownerCir->setOpacity(Qt::BrushStyle::NoBrush);
+        break;
+    case 1:
+        ownerCir->setBrush(QBrush(Qt::red,Qt::SolidPattern));
+        break;
+    case 2:
+        ownerCir->setBrush(QBrush(Qt::green,Qt::SolidPattern));
+        break;
+    }
 }
 
 Game::Game(QGraphicsScene * _scene, QGraphicsView * _view)
 {
     view = _view;
     scene = _scene;
-    Init();
-    setUpDisplay();
+
 }
 
 void Game::Init()
 {
     qDebug () << "The function Init function is being called";
+    cellSize = 50;
     movesLeft = ROWS*ROWS - 4;
     currentPlayer = 1;
     humanScore = aiScore = 2;
@@ -64,7 +85,7 @@ void Game::Init()
 
 void Game::MakeMove(int Who, int Row, int Col)
 {
-    this->coordinatesToFlip.clear();
+    //this->coordinatesToFlip.clear();
     currentPlayer = Who;
 
         //Rechecks whether opponent can make a move or not for the Proj2Comp.
@@ -411,75 +432,87 @@ void Game::FlipOnDirection(int startRow, int startCol, GameDirection d)
         }
 }
 
-void Game::Click(QMouseEvent * event)
+void Game::Click(QPoint p, int who)
 {
-    if(thisRect==nullptr)
-        qDebug() << "null";
-    else
-        qDebug() << "not null";
-    qDebug() << event->pos();
-    if(thisRect->contains() )
-        qDebug() << "in rect";
+    //qDebug() << "size of thisrect " << thisRect->rect().width() << thisRect->rect().height();
+    if(thisRect->contains(p)){
+            int row = int(p.x()/cellSize);
+            int column = int(p.y()/cellSize);
+            currentPlayer = who;
+            CalculateValidMoves();
+            if( validMoves.size() == 0 ){
+                noValidMoves[who] = true;
+                return;
+            }
+
+            if (IsValidMove(row,column))
+            {
+                MakeMove(who, row, column);
+                updatedScreen();
+            }
+
+    }
 }
 
 void Game::drawCircle(int x, int y, int player)
 {
-    int row = int(x) * 50; int column = int(y) * 50;
-    QGraphicsEllipseItem * c = new QGraphicsEllipseItem(row ,column,50,50);
-    player == 1 ? c->setBrush(colorOne) : c->setBrush(colorTwo);
-    scene->addItem(c);
+
 }
 
 void Game::updatedScreen()
 {
+    QSize viewSize = view->size();
+    thisRect->setRect(0,0,viewSize.width(),viewSize.height());
 
+    for (int j = 0; j < ROWS; j++){
+        for (int i = 0; i < COLS; i++){
+            gameBoard[j][i].Display();
+        }
+    }
 }
 
 void Game::setUpDisplay()
 {
-    QSize viewSize = view->size();
-    qDebug() << viewSize.width() << viewSize.height();
-
-    thisRect = new QGraphicsRectItem(0,0,viewSize.width(),viewSize.height());
+    thisRect = new QGraphicsRectItem(0,0,384,238);
     scene->addItem(thisRect);
-
 
     p1ScoreText = new QGraphicsTextItem();
     p1ScoreText->setPos(400,0);
     p1ScoreText->setPlainText("Player 1 Score: 0");
 
+
     p2ScoreText = new QGraphicsTextItem();
     p2ScoreText->setPos(400,50);
     p2ScoreText->setPlainText("Player 2 Score: 0");
 
+
     scene->addItem(p1ScoreText);
     scene->addItem(p2ScoreText);
 
-    inValidMoveDisplay = new QGraphicsTextItem();
-    inValidMoveDisplay->setPos(450,300);
 
-    scene->addItem(inValidMoveDisplay);
-    // Move Colors
-    colorOne.setStyle(Qt::SolidPattern); colorOne.setColor(Qt::red);
-    colorTwo.setStyle(Qt::SolidPattern); colorTwo.setColor(Qt::green);
 
     QBrush bl(Qt::SolidPattern); bl.setColor(Qt::black);
     QBrush wh(Qt::SolidPattern); wh.setColor(Qt::white);
 
     for (int j = 0; j < ROWS; j++){
         for (int i = 0; i < COLS; i++){
-            QGraphicsRectItem * rect = new QGraphicsRectItem();
-            rect->setRect(i * 50,j * 50,50,50);
-            (i % 2 == 0) ? rect->setBrush(bl) : rect->setBrush(wh);
-            scene->addItem(rect);
+                gameBoard[j][i].cellRect = new QGraphicsRectItem();
+                gameBoard[j][i].cellRect->setRect(i * cellSize,j * cellSize,cellSize,cellSize);
+                //if(gameBoard[j][i].owner)
+                gameBoard[j][i].ownerCir = new QGraphicsEllipseItem(i*cellSize ,j*cellSize,cellSize,cellSize);
+
+                //gameBoard[j][i].colorOne.setStyle(Qt::SolidPattern); gameBoard[j][i].colorOne.setColor(Qt::red);
+                //gameBoard[j][i].colorTwo.setStyle(Qt::SolidPattern); gameBoard[j][i].colorTwo.setColor(Qt::green);
+
+                (i % 2 == 0) ? gameBoard[j][i].cellRect->setBrush(bl) : gameBoard[j][i].cellRect->setBrush(wh);
+                scene->addItem(gameBoard[j][i].cellRect);
+                gameBoard[j][i].Display();
+                scene->addItem(gameBoard[j][i].ownerCir);
+
         }
-       QBrush temp = bl;
-       bl = wh;
-       wh = temp;
+        QBrush temp = bl;
+        bl = wh;
+        wh = temp;
     }
 
-    drawCircle(4,4,1);
-    drawCircle(4,3,2);
-    drawCircle(3,4,2);
-    drawCircle(3,3,1);
 }

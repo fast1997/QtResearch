@@ -21,8 +21,9 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void mousePressEvent(QMouseEvent *event);
-    virtual void paintEvent(QPaintEvent *event);
 
+    virtual void paintEvent(QPaintEvent *event);
+    virtual void resizeEvent(QResizeEvent *event);
 private:
     Ui::MainWindow *ui;
     QGraphicsScene * scene;

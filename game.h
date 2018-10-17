@@ -35,7 +35,7 @@ public:
     int Winner ();
 
     void setUpDisplay();
-    void Click(QMouseEvent*);
+    void Click(QPoint,int Who);
     void updatedScreen();
 
 private:
@@ -43,10 +43,13 @@ private:
         {
             Cell();
             Cell(int row, int col);
+            void Display();
 
             int owner;
             int r, c;
             int possibleFlips;
+            QGraphicsRectItem * cellRect;
+            QGraphicsEllipseItem * ownerCir;
         };
 
         void CalculateScores(int numFlipped);
@@ -72,12 +75,11 @@ private:
         int movesLeft;
         int boardSize;
         int theWinner;
-
+        int cellSize;
         bool noValidMoves[3];
         bool gameOver;
 
-        QBrush colorOne;
-        QBrush colorTwo;
+
 
         QGraphicsTextItem * p1ScoreText;
         QGraphicsTextItem * p2ScoreText;
